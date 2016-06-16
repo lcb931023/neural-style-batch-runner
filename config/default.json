@@ -1,0 +1,7 @@
+{
+  "port": 9000,
+  "dataPath": "/tmp/neural-style-batch-runner/",
+  "neuralStylePath": "/home/helios/neural-style/",
+  "username": "user",
+  "password": "password"
+}

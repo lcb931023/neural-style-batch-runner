@@ -1,0 +1,23 @@
+{
+  "name": "neural-style-batch-runner",
+  "version": "0.0.0",
+  "description": "An interface to run a batch of neural style transfers at once",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Changbai Li",
+  "dependencies": {
+    "express": "~4.13.3",
+    "morgan": "~1.6.1",
+    "config": "~1.17.1",
+    "body-parser": "~1.14.1",
+    "async": "~1.5.0",
+    "xml2js": "~0.4.15",
+    "underscore": "~1.8.3",
+    "imagemagick": "~0.1.3",
+    "express-ws": "~1.0.0-rc.2",
+    "passport-http": "~0.3.0",
+    "passport": "~0.3.2"
+  }
+}
