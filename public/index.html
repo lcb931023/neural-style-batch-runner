@@ -5,6 +5,57 @@
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
-  
+
+
+  <header class="info">
+    <h2>Neural Style Batch Runner</h2>
+    <div class="status-section">
+      <div class="vertical-text-column">
+        <span>queued</span>
+        <span id="queuedTask"></span>
+      </div>
+      <div class="vertical-text-column">
+        <span id="utilization"></span>
+        <span id="temperature"></span>
+        <span id="power"></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="panel">
+    <form>
+      <fieldset class="files">
+        <h4>Images</h4>
+
+        <label for="content_image">Content Image</label>
+        <input type="file" id="content_image">
+
+        <label for="style_image">Style Image</label>
+        <input type="file" id="style_image" multiple>
+
+      </fieldset>
+      <fieldset class="options variables">
+        <h4>Variables</h4>
+        <script type="x/template">
+          <div class="row">
+            <label>{{option}}</label>
+            <button type="button" data-option="{{option}}"
+            onclick="addMoreFields(event, '.variables')"> + </button>
+          </div>
+          <div class="field-container {{option}}">
+            <input type="number" data-option="{{option}}">
+          </div>
+        </script>
+      </fieldset>
+      <fieldset class="choices">
+        <h4>Choices</h4>
+
+      </fieldset>
+    </form>
+  </section>
+
+
+  <script src="mustache.js" charset="utf-8"></script>
+  <script src="main.js" charset="utf-8"></script>
 </body>
 </html>
