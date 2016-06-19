@@ -31,10 +31,6 @@ html, body {
   border-bottom: grey 1px solid;
 }
 
-.options {
-  display: flex;
-}
-
 .flex {
   display: flex;
 }
@@ -43,4 +39,9 @@ html, body {
   max-width: 80px;
   min-width: 20px;
   margin-right: 5px;
+}
+
+.button-remove {
+  position: relative;
+  left: -6px;
 }

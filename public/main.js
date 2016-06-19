@@ -26,14 +26,25 @@ function renderFields(options, fieldset){
     var field = fieldset.querySelector('.field[data-option='+optionName+']');
     var clone = field.cloneNode(true);
     clone.value = '';
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(clone);
+    // Add remove button
+    var removeButtonHTML = document.querySelector('#template-remove-button').innerHTML;
+    var removeButtonFragment = document.createRange().createContextualFragment(removeButtonHTML);
+    removeButtonFragment.firstElementChild.onclick = function removeField(e){
+      var parent = clone.parentElement;
+      parent.removeChild(clone);
+      parent.removeChild(this);
+    }
     field.parentElement.appendChild(clone);
+    field.parentElement.appendChild(removeButtonFragment);
     clone.focus();
   }
 
   var template = fieldset.querySelector('script[type="x/template"]').innerHTML;
   options.forEach( function(optionName) {
-    var field = Mustache.render(template, {option: optionName});
-    var fragment = document.createRange().createContextualFragment(field);
+    var fieldHTML = Mustache.render(template, {option: optionName});
+    var fragment = document.createRange().createContextualFragment(fieldHTML);
     var addButton = fragment.querySelector('.add-more-fields');
     if (addButton) {
       addButton.onclick = addMoreFields;
