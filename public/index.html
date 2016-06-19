@@ -38,24 +38,52 @@
         <h4>Variables</h4>
         <script type="x/template">
           <div class="row">
-            <label>{{option}}</label>
-            <button type="button" data-option="{{option}}"
-            onclick="addMoreFields(event, '.variables')"> + </button>
+            <span>{{option.name}}</span>
+            <button class="add-more-fields" type="button" data-option="{{option.name}}"> + </button>
           </div>
-          <div class="field-container {{option}}">
-            <input type="number" data-option="{{option}}">
+          <div class="field-container flex">
+            <input class="field" type="number" data-option="{{option.name}}">
           </div>
         </script>
       </fieldset>
-      <fieldset class="choices">
+      <fieldset class="options choices">
         <h4>Choices</h4>
-
+        <script type="x/template">
+          <div class="row">
+            <span>{{option.name}}</span>
+            <button class="add-more-fields" type="button" data-option="{{option.name}}"> + </button>
+          </div>
+          <div class="field-container flex">
+            <select class="field" data-option="{{option.name}}">
+              {{#option.choices}}
+              <option value="{{.}}">{{.}}</option>
+              {{/option.choices}}
+            </select>
+          </div>
+        </script>
+      </fieldset>
+      <fieldset class="options flags">
+        <h4>Flags</h4>
+        <script type="x/template">
+          <div class="field-container flex">
+            <div class="flex">
+              <label class="field flex" data-option="{{option.name}}"> {{option.name}} <input type="checkbox" value="{{option.name}}"> </label>
+            </div>
+            <button class="add-more-fields " type="button" data-option="{{option.name}}"> + </button>
+          </div>
+        </script>
       </fieldset>
     </form>
   </section>
 
+<button type="button" name="remove">❌</button>
+
+<script type="x/template" id="template-remove-button">
+
+</script>
 
   <script src="mustache.js" charset="utf-8"></script>
+  <script src="config.js" charset="utf-8"></script>
   <script src="main.js" charset="utf-8"></script>
 </body>
 </html>

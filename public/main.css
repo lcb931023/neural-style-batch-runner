@@ -35,7 +35,7 @@ html, body {
   display: flex;
 }
 
-.field-container {
+.flex {
   display: flex;
 }
 .field-container input {

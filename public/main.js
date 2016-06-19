@@ -18,26 +18,30 @@ function updateToolBarStatus(status) {
   document.querySelector('#power').textContent = status.gpus[0].power;
 }
 
-var variableOptions = [
-  'content_weight',
-  'style_weight',
-  'style_scale',
-  'learning_rate',
-  'tv_weight'
-];
 
-var variablesFieldset = document.querySelector('.variables');
-var template = document.querySelector('.variables > script[type="x/template"]').innerHTML;
-variableOptions.forEach( function(optionName) {
-  var field = Mustache.render(template, {option: optionName});
-  var fragment = document.createRange().createContextualFragment(field);
-  variablesFieldset.appendChild(fragment);
-});
+function renderFields(options, fieldset){
 
-function addMoreFields(e) {
-  var optionName = e.currentTarget.dataset.option;
-  var fieldContainer = document.querySelector('.field-container.'+optionName);
-  var clone = fieldContainer.querySelector('input[data-option="'+optionName+'"]').cloneNode();
-  clone.value = '';
-  fieldContainer.appendChild(clone);
+  function addMoreFields(e) {
+    var optionName = e.currentTarget.dataset.option;
+    var field = fieldset.querySelector('.field[data-option='+optionName+']');
+    var clone = field.cloneNode(true);
+    clone.value = '';
+    field.parentElement.appendChild(clone);
+    clone.focus();
+  }
+
+  var template = fieldset.querySelector('script[type="x/template"]').innerHTML;
+  options.forEach( function(optionName) {
+    var field = Mustache.render(template, {option: optionName});
+    var fragment = document.createRange().createContextualFragment(field);
+    var addButton = fragment.querySelector('.add-more-fields');
+    if (addButton) {
+      addButton.onclick = addMoreFields;
+    }
+    fieldset.appendChild(fragment);
+  });
 }
+
+renderFields(variableOptions, document.querySelector('.variables'));
+renderFields(choiceOptions, document.querySelector('.choices'));
+renderFields(flagsOptions, document.querySelector('.flags'));
