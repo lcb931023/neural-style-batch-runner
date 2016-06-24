@@ -1,3 +1,4 @@
+
 .status-section {
   display: flex;
   flex-direction: row;
@@ -44,4 +45,12 @@ html, body {
 .button-remove {
   position: relative;
   left: -6px;
+}
+
+.start {
+  padding: 5px;
+  margin: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1em;
 }

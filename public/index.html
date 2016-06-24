@@ -28,10 +28,12 @@
         <h4>Images</h4>
 
         <label for="content_image">Content Image</label>
-        <input type="file" id="content_image">
+        <input type="file" id="content_image" name="content_image" accept="image/*">
+        <div class="preview content_image"></div>
 
         <label for="style_image">Style Image</label>
-        <input type="file" id="style_image" multiple>
+        <input type="file" id="style_image" name="style_image" accept="image/*" multiple>
+        <div class="preview style_image"></div>
 
       </fieldset>
       <fieldset class="options variables flex">
@@ -42,7 +44,7 @@
           <button class="add-more-fields" type="button" data-option="{{option.name}}"> + </button>
         </div>
         <div class="field-container flex">
-          <input class="field" type="number" data-option="{{option.name}}">
+          <input class="field" type="number" name="{{option.name}}" data-option="{{option.name}}">
         </div>
         </script>
       </fieldset>
@@ -54,7 +56,7 @@
           <button class="add-more-fields" type="button" data-option="{{option.name}}"> + </button>
         </div>
         <div class="field-container flex">
-          <select class="field" data-option="{{option.name}}">
+          <select class="field" name="{{option.name}}" data-option="{{option.name}}">
             {{#option.choices}}
             <option value="{{.}}">{{.}}</option>
             {{/option.choices}}
@@ -67,12 +69,16 @@
         <script type="x/template">
         <div class="field-container flex">
           <div class="flex">
-            <label class="field flex" data-option="{{option.name}}"> {{option.name}} <input type="checkbox" value="{{option.name}}"> </label>
+            <label class="field flex" data-option="{{option.name}}"> {{option.name}}
+              <input type="checkbox" name="{{option.name}}" value="{{option.name}}">
+            </label>
           </div>
           <button class="add-more-fields " type="button" data-option="{{option.name}}"> + </button>
         </div>
         </script>
       </fieldset>
+      <button class="start" type="button">Start</button>
+      <span class="upload-status"></span>
     </form>
   </section>
 

@@ -56,3 +56,88 @@ function renderFields(options, fieldset){
 renderFields(variableOptions, document.querySelector('.variables'));
 renderFields(choiceOptions, document.querySelector('.choices'));
 renderFields(flagsOptions, document.querySelector('.flags'));
+
+document.querySelector(".start").onclick = function start(e) {
+  var form = document.querySelector(".panel form");
+  // TODO Validate that fields have content or selections
+
+  // Upload images
+  uploadStatus.domElement.innerText = "Uploading...";
+  var contentFileList = form.elements["content_image"].files;
+  var styleFileList = form.elements["style_image"].files;
+  debugger;
+  uploadStatus.fileCount = 1 + styleFileList.length;
+  // TODO id should be kept at a better place?
+  var id = Math.round(Math.random() * Math.pow(10, 16));
+  uploadImage(contentFileList[0], id, "content_image", 0);
+  for (var i = 0; i < styleFileList.length; i++) {
+    uploadImage(styleFileList[i], id, "style_image", i);
+  }
+}
+
+var uploadStatus = {
+  fileCount: 0,
+  finishedCount: 0,
+  update: function () {
+    this.finishedCount ++;
+    this.domElement.innerText = "Uploading... " + this.finishedCount + "/" + this.fileCount;
+  },
+  check: function () {
+    if (this.finishedCount == this.fileCount) {
+      this.domElement.innerText = "Done!";
+      setTimeout(function(){
+        this.domElement.innerText = "";
+      }.bind(this), 1000);
+      this.finishedCount = 0;
+      this.fileCount = 0;
+      return true;
+    }
+    return false;
+  },
+  domElement: document.querySelector('.panel .upload-status')
+}
+
+function uploadImage(file, id, purpose, index) {
+  var xhr = new XMLHttpRequest();
+  // When upload's done?
+  xhr.addEventListener('load', function(event) {
+    uploadStatus.update();
+    if (uploadStatus.check()) {
+      // TODO sendRender();
+      console.log("Done!");
+    }
+  }.bind(this), false);
+  xhr.open('POST', '/upload/' + id + '/' + purpose + '/' + index);
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  var reader = new FileReader();
+  reader.onload = function(event) {
+    xhr.send(event.target.result);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function sendRender(id, settings) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/render/' + id);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(settings));
+}
+
+
+
+function handleFileChange(e) {
+  var previewHolder = document.querySelector('.preview.'+e.target.id);
+  previewHolder.innerHTML = "";
+  for (var i = 0; i < e.target.files.length; i++) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      var image = new Image(100, 100);
+      image.src = event.target.result;
+      previewHolder.appendChild(image);
+    };
+    reader.readAsDataURL(e.target.files[i]);
+  }
+}
+
+document.querySelector('#content_image').onchange = handleFileChange;
+document.querySelector('#style_image').onchange = handleFileChange;
