@@ -8,6 +8,7 @@ var neuralStyleUtil = require('./neural-style-util');
 var path = require('path');
 var util = require('util');
 var xml2js = require('xml2js');
+var logger = require('./logger');
 
 var NUM_PROGRESS_IMAGES = 10;
 
@@ -17,12 +18,12 @@ function queryGpus(callback) {
     {maxBuffer: 1024 * 1024},
     function(err, stdout, stderr) {
       if (err) {
-        util.log('nvidia-smi failed: ' + err + ' ' + stderr);
+        logger.log('error', 'nvidia-smi failed: ' + err + ' ' + stderr);
         return callback({});
       }
       xml2js.parseString(stdout, function(err, data) {
         if (err) {
-          util.log('failed to parse nvidia-smi output: ' + err);
+          logger.log('error', 'failed to parse nvidia-smi output: ' + err);
           return callback({});
         }
         return callback(data.nvidia_smi_log);
@@ -99,7 +100,7 @@ function runRender(task, callback) {
     params.push(1);
   }
 
-  util.log('Running neural_style for id ' + task.id + ' with params: ' + params);
+  logger.log('info', 'Running neural_style for id ' + task.id + ' with params: ' + params);
   var neuralStyle = childProcess.spawn('th', params, {
     'cwd': config.get('neuralStylePath'),
   });
@@ -135,12 +136,12 @@ function runRender(task, callback) {
   neuralStyle.on('exit', function(code) {
     gpuIndexes.push(gpuIndex);
     if (code != 0) {
-      util.log('neural_style failed for id ' + task.id + ' with code ' + code + '\n' + neuralStyle.stderr.read());
+      logger.log('error', 'neural_style failed for id ' + task.id + ' with code ' + code + '\n' + neuralStyle.stderr.read());
       if (task.state != neuralStyleUtil.CANCELLED) {
         task.state = neuralStyleUtil.FAILED;
       }
     } else {
-      util.log('neural_style done for id ' + task.id);
+      logger.log('info', 'neural_style done for id ' + task.id);
       task.state = neuralStyleUtil.DONE;
     }
     sendTaskStatusEvent(task);
@@ -158,7 +159,7 @@ queryGpus(function(gpuInfo) {
 
 neuralStyleUtil.getExistingTasks(function(err, existingTasks) {
   if (err) {
-    util.log('Failed to find existing tasks: ' + err);
+    logger.log('error', 'Failed to find existing tasks: ' + err);
     return;
   }
   tasks = tasks.concat(existingTasks);
@@ -207,7 +208,7 @@ exports.enqueueJob = function(id, settings) {
     };
     tasks.unshift(task);
     if (err) {
-      util.log(err);
+      logger.log('error', err);
       task.state = neuralStyleUtil.FAILED;
     } else {
       workqueue.push(task);

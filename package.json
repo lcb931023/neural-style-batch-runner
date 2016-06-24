@@ -8,16 +8,17 @@
   },
   "author": "Changbai Li",
   "dependencies": {
-    "express": "~4.13.3",
-    "morgan": "~1.6.1",
-    "config": "~1.17.1",
-    "body-parser": "~1.14.1",
     "async": "~1.5.0",
-    "xml2js": "~0.4.15",
-    "underscore": "~1.8.3",
-    "imagemagick": "~0.1.3",
+    "body-parser": "~1.14.1",
+    "config": "~1.17.1",
+    "express": "~4.13.3",
     "express-ws": "~1.0.0-rc.2",
+    "imagemagick": "~0.1.3",
+    "morgan": "~1.6.1",
+    "passport": "~0.3.2",
     "passport-http": "~0.3.0",
-    "passport": "~0.3.2"
+    "underscore": "~1.8.3",
+    "winston": "^2.2.0",
+    "xml2js": "~0.4.15"
   }
 }
