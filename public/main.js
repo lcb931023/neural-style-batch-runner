@@ -65,13 +65,35 @@ document.querySelector(".start").onclick = function start(e) {
   uploadStatus.domElement.innerText = "Uploading...";
   var contentFileList = form.elements["content_image"].files;
   var styleFileList = form.elements["style_image"].files;
-  debugger;
   uploadStatus.fileCount = 1 + styleFileList.length;
   // TODO id should be kept at a better place?
   var id = Math.round(Math.random() * Math.pow(10, 16));
-  uploadImage(contentFileList[0], id, "content_image", 0);
+
+  var args = [[contentFileList[0], id, "content_image", 0]];
   for (var i = 0; i < styleFileList.length; i++) {
-    uploadImage(styleFileList[i], id, "style_image", i);
+    args.push([styleFileList[i], id, "style_image", i]);
+  }
+  doasync(uploadImage, args, function(){
+    // TODO invoke the final ajax call here
+  });
+}
+
+/**
+ * From Michael; Simple replication of caolan's async module
+ * Runs function for each arguments, and executes done when they all finish
+ */
+var doasync = function(func, arr, done) {
+  var limit = arr.length;
+  var i = 0;
+  function count() {
+    limit -= 1;
+    if (limit === 0) {
+      return done();
+    }
+  }
+  for(; i < arr.length; i++) {
+    arr[i].push(count);
+    func.apply(null, arr[i]);
   }
 }
 
@@ -81,6 +103,7 @@ var uploadStatus = {
   update: function () {
     this.finishedCount ++;
     this.domElement.innerText = "Uploading... " + this.finishedCount + "/" + this.fileCount;
+    this.check();
   },
   check: function () {
     if (this.finishedCount == this.fileCount) {
@@ -97,15 +120,12 @@ var uploadStatus = {
   domElement: document.querySelector('.panel .upload-status')
 }
 
-function uploadImage(file, id, purpose, index) {
+function uploadImage(file, id, purpose, index, callback) {
   var xhr = new XMLHttpRequest();
   // When upload's done?
   xhr.addEventListener('load', function(event) {
     uploadStatus.update();
-    if (uploadStatus.check()) {
-      // TODO sendRender();
-      console.log("Done!");
-    }
+    callback();
   }.bind(this), false);
   xhr.open('POST', '/upload/' + id + '/' + purpose + '/' + index);
   xhr.setRequestHeader('Content-Type', 'application/octet-stream');
